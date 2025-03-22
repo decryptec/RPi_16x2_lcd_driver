@@ -22,13 +22,25 @@ static struct gpio_desc *lcd, *button;
 
 static int major = 0;
 
-static ssize_t my_write (struct file *filp, const char __user *user_buf, size_t len, loff_t *offset){
+static ssize_t my_read (struct file *filp, char __user *user_buf, size_t len, loff_t *offset)
+{
+	
+}
+
+static ssize_t my_write (struct file *filp, const char __user *user_buf, size_t len, loff_t *offset)
+{
 
 }
+
+statis long my_ioctl (struct file *filp, unsigned int cmd, unsigned long arg)
+{
+	
+}
+
 static struct file_operations fops = {
 	.read = my_read,
 	.write = my_write,
-  .ioctl = my_ioctl
+	.unlocked_ioctl = my_ioctl
 };
 
 static struct file_operations fops = {
