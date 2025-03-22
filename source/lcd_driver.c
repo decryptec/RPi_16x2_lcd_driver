@@ -5,7 +5,7 @@
 static struct gpio_desc *lcd, *button;
 
 //GPIO pins
-#define VEE 5
+#define VEE 5 //Controls contrast
 #define reg_select 6
 #define read_write 13
 #define enable 19
@@ -32,7 +32,7 @@ static ssize_t my_write (struct file *filp, const char __user *user_buf, size_t 
 
 }
 
-statis long my_ioctl (struct file *filp, unsigned int cmd, unsigned long arg)
+static long my_ioctl (struct file *filp, unsigned int cmd, unsigned long arg)
 {
 	
 }
@@ -41,12 +41,6 @@ static struct file_operations fops = {
 	.read = my_read,
 	.write = my_write,
 	.unlocked_ioctl = my_ioctl
-};
-
-static struct file_operations fops = {
-	.read = my_read,
-	.write = my_write,
-  .ioctl = my_ioctl
 };
 
 static int __init my_init(void)
