@@ -38,9 +38,9 @@ static long my_ioctl (struct file *filp, unsigned int cmd, unsigned long arg)
 }
 
 static struct file_operations fops = {
-	.read = my_read,
-	.write = my_write,
-	.unlocked_ioctl = my_ioctl
+    .read = my_read,
+    .write = my_write,
+    .unlocked_ioctl = my_ioctl
 };
 
 static int __init my_init(void)
