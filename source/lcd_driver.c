@@ -82,10 +82,20 @@ int gpio_init(void) {
     data_pins[3] = d7;
 
     // Set GPIOs to output
+    status = gpiod_direction_ouput(rs,0);
+        if (status) {
+            pr_err("lcd_driver - Error setting data pin %d to output\n", i);t
+            return status;
+        }
+    status = gpiod_direction_output(en,0);
+        if (status) {
+            pr_err("lcd_driver - Error setting data pin %d to output\n", i);t
+            return status;
+        }
     for (int i = 0; i < 4; i++) {
         status = gpiod_direction_output(data_pins[i], 0);
         if (status) {
-            pr_err("lcd_driver - Error setting data pin %d to output\n", i);
+            pr_err("lcd_driver - Error setting data pin %d to output\n", i);t
             return status;
         }
     }
