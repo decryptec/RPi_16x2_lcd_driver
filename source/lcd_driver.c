@@ -71,12 +71,12 @@ int gpio_init(void) {
 // GPIO Cleanup
 static void gpio_cleanup(void)
 {
-    gpiod_put(rs);
-    gpiod_put(en);
-    gpiod_put(d4);
-    gpiod_put(d5);
-    gpiod_put(d6);
-    gpiod_put(d7);
+    gpiod_set_value(rs, 0);
+    gpiod_set_value(en, 0);
+    gpiod_set_value(d4, 0);
+    gpiod_set_value(d5, 0);
+    gpiod_set_value(d6, 0);
+    gpiod_set_value(d7, 0);
     pr_info("lcd_driver - GPIOs cleaned up\n");
 }
 
