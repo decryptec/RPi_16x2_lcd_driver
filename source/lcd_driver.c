@@ -97,10 +97,16 @@ int gpio_init(void) {
 // GPIO Cleanup
 static void gpio_cleanup(void)
 {
-    rs = en = d4 = d5 = d6 = d7 = NULL;
+    gpiod_put(rs);
+    gpiod_put(en);
+    gpiod_put(d4);
+    gpiod_put(d5);
+    gpiod_put(d6);
+    gpiod_put(d7);
     unregister_chrdev(major, "lcd_dev");
     pr_info("lcd_driver - GPIOs cleaned up\n");
 }
+
 
 // Enable Pulse for LCD
 static void pulseEnable(void)
