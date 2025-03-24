@@ -3,6 +3,7 @@
 #include <linux/gpio/consumer.h>
 #include <linux/fs.h>
 #include <linux/uaccess.h>
+#include <linux/delay.h>
 
 #define IO_OFFSET 512
 #define reg_select 0
@@ -97,6 +98,7 @@ int gpio_init(void) {
 static void gpio_cleanup(void)
 {
     rs = en = d4 = d5 = d6 = d7 = NULL;
+    unregister_chrdev(major, "lcd_dev");
     pr_info("lcd_driver - GPIOs cleaned up\n");
 }
 
@@ -176,7 +178,7 @@ static int lcd_init(void)
         printk("lcd_driver - error registering chrdev\n");
         return major;
     }
-    print_info("lcd_driver - Major Device Number: %d\n", major);
+    pr_info("lcd_driver - Major Device Number: %d\n", major);
 
     gpio_init();
 
