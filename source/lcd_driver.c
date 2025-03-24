@@ -30,6 +30,7 @@ static struct gpio_desc *rs, *en, *d4, *d5, *d6, *d7;
 static struct gpio_desc *data_pins[4];
 
 static int major = 0;
+static char buffer[32];  // LCD buffer (max 32 chars for 16x2 display)
 
 // File Operations Stubs
 static ssize_t my_read(struct file *filp, char __user *user_buf, size_t len, loff_t *offset)
@@ -119,6 +120,53 @@ static void write4bits(uint8_t value)
     pulseEnable();  // Ensure the LCD latches the data
 }
 
+// Copy string to buffer and determine length
+static void str_to_buff(char input[], int *len)
+{
+    *len = 0; // Initialize length counter
+
+    for (int i = 0; i < 31; ++i) { // Leave space for null terminator
+        buffer[i] = input[i];
+        
+        if (input[i] == '\0') 
+            break;  // Stop at null character
+
+        (*len)++;  // Increment length
+    }
+
+    buffer[*len] = '\0'; // Ensure null termination
+}
+
+// Write string to LCD
+static int write_lcd(char string[])  
+{
+    int len = 0;
+    str_to_buff(string, &len);  // Copy and get actual length
+
+    if (len > 32) {
+        pr_err("lcd_driver - buffer overload\n");
+        return -1;
+    }
+
+    // Set RS high to write
+    gpiod_set_value(rs, 1);
+
+    for (int i = 0; i < len; ++i) {
+        write4bits(buffer[i] >> 4);  // Send upper nibble
+        write4bits(buffer[i] & 0x0F);  // Send lower nibble
+
+        if (buffer[i] == '\0')  // Stop at null terminator
+            return 0;
+        
+        if (i == 15) { // Move cursor to second line
+            write4bits(0xC0 >> 4);  // DDRAM address for row 2
+            write4bits(0xC0 & 0x0F);
+        }
+    }
+
+    return 0;
+}
+
 // LCD Initialization
 static int lcd_init(void)
 {
@@ -158,40 +206,13 @@ static int lcd_init(void)
     write4bits(LCD_DISPLAY_ON >> 4);
     write4bits(LCD_DISPLAY_ON & 0x0F);
 
+    //LCD print
+    write_lcd("Hello World");
     return 0;
 }
 
-// Module Initialization
-static int __init my_init(void)
-{
-    major = register_chrdev(0, "lcd_cdev", &fops);
-    if (major < 0) {
-        pr_err("lcd_driver - Error registering chrdev\n");
-        return major;
-    }
-
-    if (gpio_init()) {
-        unregister_chrdev(major, "lcd_cdev");
-        pr_err("lcd_driver - GPIO initialization failed\n");
-        return -EINVAL;
-    }
-
-    lcd_init();  // Initialize LCD after GPIO setup
-
-    pr_info("lcd_driver - Major Device Number: %d\n", major);
-    return 0;
-}
-
-// Module Exit
-static void __exit my_exit(void)
-{
-    gpio_cleanup();
-    unregister_chrdev(major, "lcd_cdev");
-    pr_info("lcd_driver - Module exited\n");
-}
-
-module_init(my_init);
-module_exit(my_exit);
+module_init(lcd_init);
+module_exit(gpio_cleanup);
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Decryptec");
