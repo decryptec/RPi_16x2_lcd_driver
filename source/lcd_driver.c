@@ -30,7 +30,7 @@
 static struct gpio_desc *rs, *en, *d4, *d5, *d6, *d7;
 static struct gpio_desc *data_pins[4];
 
-static int major = 0;
+//static int major = 0;
 static char buffer[32];  // LCD buffer (max 32 chars for 16x2 display)
 
 // File Operations Stubs
@@ -82,20 +82,20 @@ int gpio_init(void) {
     data_pins[3] = d7;
 
     // Set GPIOs to output
-    status = gpiod_direction_ouput(rs,0);
+    status = gpiod_direction_output(rs,0);
         if (status) {
-            pr_err("lcd_driver - Error setting data pin %d to output\n", i);t
+            pr_err("lcd_driver - Error setting data pin %d to output\n", reg_select);
             return status;
         }
     status = gpiod_direction_output(en,0);
         if (status) {
-            pr_err("lcd_driver - Error setting data pin %d to output\n", i);t
+            pr_err("lcd_driver - Error setting data pin %d to output\n", enable);
             return status;
         }
     for (int i = 0; i < 4; i++) {
         status = gpiod_direction_output(data_pins[i], 0);
         if (status) {
-            pr_err("lcd_driver - Error setting data pin %d to output\n", i);t
+            pr_err("lcd_driver - Error setting data pin %d to output\n", i);
             return status;
         }
     }
@@ -113,7 +113,7 @@ static void gpio_cleanup(void)
     gpiod_put(d5);
     gpiod_put(d6);
     gpiod_put(d7);
-    unregister_chrdev(major, "lcd_dev");
+    //unregister_chrdev(major, "lcd_dev");
     pr_info("lcd_driver - GPIOs cleaned up\n");
 }
 
@@ -189,12 +189,12 @@ static int write_lcd(char string[])
 static int lcd_init(void)
 {
 
-    major = register_chrdev(0, "lcd_dev", &fops); 
-    if (major < 0) {
-        printk("lcd_driver - error registering chrdev\n");
-        return major;
-    }
-    pr_info("lcd_driver - Major Device Number: %d\n", major);
+    //major = register_chrdev(0, "lcd_dev", &fops); 
+    //if (major < 0) {
+    //    printk("lcd_driver - error registering chrdev\n");
+    //    return major;
+    //}
+    //pr_info("lcd_driver - Major Device Number: %d\n", major);
 
     gpio_init();
 
