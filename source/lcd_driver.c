@@ -170,6 +170,16 @@ static int write_lcd(char string[])
 // LCD Initialization
 static int lcd_init(void)
 {
+
+    major = register_chrdev(0, "lcd_dev", &fops); 
+    if (major < 0) {
+        printk("lcd_driver - error registering chrdev\n");
+        return major;
+    }
+    print_info("lcd_driver - Major Device Number: %d\n", major);
+
+    gpio_init();
+
     msleep(50);  // Step 1: Power-on delay (>40ms after Vcc rises)
 
     // Step 2: Send Function Set (8-bit mode, repeated 3 times)
