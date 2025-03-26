@@ -190,4 +190,3 @@ module_exit(lcd_driver_exit);
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Decryptec");
 MODULE_DESCRIPTION("Optimized LCD Driver for Raspberry Pi 4B");
-
