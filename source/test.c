@@ -18,41 +18,38 @@
 int main() {
 	int test_left = 5;
 	int test_right = 8;
-    int dev = open("/dev/lcd0", O_WRONLY);
-    if (dev == -1) {
-        perror("Failed to open LCD device");
-        return -1;
-    }
+	int dev = open("/dev/lcd0", O_WRONLY);
+	if (dev == -1) {
+		perror("Failed to open LCD device");
+		return -1;
+	}
 
-    if (ioctl(dev, INIT, 1) == -1) {
-        perror("Failed to initialize LCD");
-    }
+	if (ioctl(dev, CLEAR) == -1) {
+		perror("Failed to clear LCD display");
+	}
 
-    if (ioctl(dev, CLEAR) == -1) {
-        perror("Failed to clear LCD display");
-    }
-
-    if (ioctl(dev, LINE_1) == -1) {
-        perror("Failed to disable cursor");
-    }
+	if (ioctl(dev, LINE_1) == -1) {
+		perror("Failed to disable cursor");
+	}
 	write(dev, "Line 1 testing", strlen("Line 1 testing"));
 	printf("\nLength of string: %d \n", strlen("Line 1 testing")); 
 	sleep(1);
+	if (ioctl(dev, scroll_left, &test_left) == -1) {
+		perror("Failed to enable scrolling");
+	}
+	sleep(1);
 
-    if (ioctl(dev, LINE_2) == -1) {
-        perror("Failed to set cursor position");
-    }
+	if (ioctl(dev, LINE_2) == -1) {
+		perror("Failed to set cursor position");
+	}
 	write(dev, "Line 2 testing", strlen("Line 2 testing"));
 	sleep(1);
-    if (ioctl(dev, scroll_left, &test_left) == -1) {
-        perror("Failed to enable scrolling");
-    }
+
+	if (ioctl(dev, scroll_right, &test_right) == -1) {
+		perror("Failed to enable scrolling");
+	}
 	sleep(1);
-    if (ioctl(dev, scroll_right, &test_right) == -1) {
-        perror("Failed to enable scrolling");
-    }
-    	sleep(1);
-    close(dev);
-    return 0;
+	close(dev);
+	return 0;
 }
 
