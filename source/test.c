@@ -111,9 +111,15 @@ int main() {
 	printf("Scrolling left with %d steps...\n", test_left);
 	sleep(1);
 
+	//Clear
+	ioctl(dev, CLEAR);
+    write(dev, "Test complete", strlen("Test complete"));
+
+
     // Clean up and close the device
     close(dev);
     printf("LCD device closed\n");
 
     return 0;
 }
+
