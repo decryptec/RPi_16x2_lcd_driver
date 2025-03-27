@@ -4,17 +4,7 @@
 #include <linux/ioctl.h>
 
 #define IO_OFFSET 512
-#define MAX_BUFFER_SIZE 33 // 32 chars + null char
-
-// Control pins
-#define REG_SELECT 0
-#define ENABLE 5
-
-// 4-bit Interface Data Pins
-#define DATA_4 6
-#define DATA_5 13
-#define DATA_6 19
-#define DATA_7 26
+#define MAX_BUFFER_SIZE 33  // 16 chars + null char
 
 // LCD Configuration
 #define LCD_CLEAR_DISPLAY  0x01
@@ -26,12 +16,24 @@
 #define LCD_SCROLL_LEFT    0x18
 #define LCD_SCROLL_RIGHT   0x1C
 
+struct lcd_pins{
+    int rs;
+    int en;
+    int d4;
+    int d5;
+    int d6;
+    int d7;
+};
+
 // ioctl commands
 #define CLEAR         _IO('a', 'b')
-#define LINE_1        _IO('a', 'c')
-#define LINE_2        _IO('a', 'd')
+#define LINE_1        _IOW('a', 'c', int32_t *)
+#define LINE_2        _IOW('a', 'd', int32_t *)
 #define SCROLL_LEFT   _IOW('a', 'e', int32_t *)
 #define SCROLL_RIGHT  _IOW('a', 'f', int32_t *)
+#define INIT _IOW('a', 'g', struct lcd_pins *)
+
+static int lcd_init(struct lcd_pins * pins);
 
 #endif // LCD_DRIVER_H
 
