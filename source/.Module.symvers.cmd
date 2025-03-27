@@ -1,1 +1,0 @@
-savedcmd_/home/donh/linux_drivers/test/RPi_1602A_lcd_driver/source/Module.symvers :=  scripts/mod/modpost -M -m -a      -o /home/donh/linux_drivers/test/RPi_1602A_lcd_driver/source/Module.symvers -T /home/donh/linux_drivers/test/RPi_1602A_lcd_driver/source/modules.order -i Module.symvers -e 
