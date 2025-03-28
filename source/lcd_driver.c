@@ -41,6 +41,7 @@ static ssize_t my_read(struct file *filp, char __user *user_buffer, size_t count
         write_full(buffer);
     }
 
+    pr_info("lcd_driver - Read. Last written content: %s\n", buffer);
     return len;
 }
 
@@ -65,6 +66,7 @@ static ssize_t my_write(struct file *filp, const char __user *user_buffer, size_
 
     // Write data to device
     write_full(buffer);
+    pr_info("lcd_driver - Write. Update buffer content: %s\n", buffer);
 
     return count;  // Return number of bytes written
 }
@@ -75,23 +77,23 @@ static long int my_ioctl(struct file *filep, unsigned cmd, unsigned long arg) {
 
     switch (cmd) {
         case CLEAR:
-            pr_info("lcd_driver - Clear display");
+            pr_info("lcd_driver - Clear display\n");
             lcd_byte(LCD_CLEAR_DISPLAY, 0);  // Clear display
             break;
 
         case LINE_1:
             // Copy user input for cursor position
             if (copy_from_user(&user_input, (int32_t __user *)arg, sizeof(user_input))) {
-                pr_err("lcd_driver - Error setting ROW 1 cursor");
+                pr_err("lcd_driver - Error setting ROW 1 cursor\n");
                 return -EFAULT;
             }
             // Set cursor if valid position
             if (user_input >= 0 && user_input < 16) {
                 lcd_byte(LCD_LINE_1 | user_input, 0);
-                pr_info("lcd_driver - ROW 1 cursor set at col %d", user_input);
+                pr_info("lcd_driver - ROW 1 cursor set at col %d\n", user_input);
                 msleep(10);
             } else {
-                pr_err("lcd_driver - Out of screen bounds");
+                pr_err("lcd_driver - Out of screen bounds\n");
                 return -EINVAL;
             }
             break;
@@ -99,16 +101,16 @@ static long int my_ioctl(struct file *filep, unsigned cmd, unsigned long arg) {
         case LINE_2:
             // Copy user input for cursor position
             if (copy_from_user(&user_input, (int32_t __user *)arg, sizeof(user_input))) {
-                pr_err("lcd_driver - Error setting ROW 2 cursor");
+                pr_err("lcd_driver - Error setting ROW 2 cursor\n");
                 return -EFAULT;
             }
             // Set cursor if valid position
             if (user_input >= 0 && user_input < 16) {
                 lcd_byte(LCD_LINE_2 | user_input, 0);
-                pr_info("lcd_driver - ROW 2 cursor set at col %d", user_input);
+                pr_info("lcd_driver - ROW 2 cursor set at col %d\n", user_input);
                 msleep(10);
             } else {
-                pr_err("lcd_driver - Out of screen bounds");
+                pr_err("lcd_driver - Out of screen bounds\n");
                 return -EINVAL;
             }
             break;
@@ -116,6 +118,7 @@ static long int my_ioctl(struct file *filep, unsigned cmd, unsigned long arg) {
         case SCROLL_LEFT:
             // Copy user input for scroll count
             if (copy_from_user(&user_input, (int32_t __user *)arg, sizeof(user_input))) {
+                pr_err("lcd_driver - Error scrolling left\n");
                 return -EFAULT;
             }
             // Scroll display left
@@ -123,11 +126,14 @@ static long int my_ioctl(struct file *filep, unsigned cmd, unsigned long arg) {
                 lcd_byte(LCD_SCROLL_LEFT, 0);
                 msleep(500);
             }
+            pr_info("lcd_driver - Scroll left by %d\n", user_input);
+
             break;
 
         case SCROLL_RIGHT:
             // Copy user input for scroll count
             if (copy_from_user(&user_input, (int32_t __user *)arg, sizeof(user_input))) {
+                pr_err("lcd_driver - Error scrolling right\n");
                 return -EFAULT;
             }
             // Scroll display right
@@ -135,6 +141,8 @@ static long int my_ioctl(struct file *filep, unsigned cmd, unsigned long arg) {
                 lcd_byte(LCD_SCROLL_RIGHT, 0);
                 msleep(500);
             }
+            pr_info("lcd_driver - Scroll right by %d\n", user_input);
+
             break;
 
         case INIT:
@@ -145,8 +153,8 @@ static long int my_ioctl(struct file *filep, unsigned cmd, unsigned long arg) {
             } else {
                 lcd_init(&usr_pins);
             }
+            pr_info("lcd_driver - INIT. rs=%d, en=%d, d4 = %d, d5 = %d, d6 = %d, d7 = %d",usr_pins.rs,usr_pins.en,usr_pins.d4,usr_pins.d5,usr_pins.d6,usr_pins.d7);
             break;
-
         default:
             return -EINVAL;  // Invalid command
     }

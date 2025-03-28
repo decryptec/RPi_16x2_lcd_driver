@@ -15,7 +15,7 @@ char usr_buf[MAX_BUFFER_SIZE];
 
 int main() {
     int cursor_pos = 0;
-    const char *line1 = "Line 1:Truncate overflow test....";
+    const char *line1 = "Line 1: Truncate overflow test.........";
     const char *overwrite = "(Overwriting at cursor)";
     int test_left = 20;
     int test_right = 20;
@@ -35,6 +35,7 @@ int main() {
         close(dev);
         return -1;
     }
+    printf("Initialize LCD\n");
     sleep(2);
 
     // Clear LCD display

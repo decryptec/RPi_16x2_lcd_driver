@@ -1,0 +1,1 @@
+savedcmd_/home/sidebyte/linux_drivers/RPi_1602A_lcd_driver/source/Module.symvers :=  scripts/mod/modpost -M -m -a      -o /home/sidebyte/linux_drivers/RPi_1602A_lcd_driver/source/Module.symvers -T /home/sidebyte/linux_drivers/RPi_1602A_lcd_driver/source/modules.order -i Module.symvers -e 
