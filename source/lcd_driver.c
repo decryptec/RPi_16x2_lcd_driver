@@ -231,9 +231,9 @@ static int lcd_init(struct lcd_pins * pins) {
     lcd_byte(0x02, 0);
 
     lcd_byte(LCD_FUNCTION_SET, 0);
-    lcd_byte(LCD_DISPLAY_ON, 0);
-    lcd_byte(LCD_ENTRY_MODE_SET, 0);
+    lcd_byte(LCD_DISPLAY_OFF, 0);
     lcd_byte(LCD_CLEAR_DISPLAY, 0);
+    lcd_byte(LCD_ENTRY_MODE_SET, 0);
     msleep(2);
 
     write_full("LCD initialized");
