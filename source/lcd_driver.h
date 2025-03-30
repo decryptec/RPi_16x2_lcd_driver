@@ -9,7 +9,7 @@
 // LCD Configuration
 #define LCD_CLEAR_DISPLAY  0x01
 #define LCD_FUNCTION_SET   0x28 // 4-bit, 2-line, 5x7 font
-#define LCD_DISPLAY_ON     0x0C // Display ON, Cursor OFF, Blink OFF
+#define LCD_DISPLAY_OFF     0x08 // Display OFF, Cursor OFF, Blink OFF
 #define LCD_ENTRY_MODE_SET 0x06 // Auto Increment cursor
 #define LCD_LINE_1         0x80
 #define LCD_LINE_2         0xC0
