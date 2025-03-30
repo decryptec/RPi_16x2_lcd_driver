@@ -35,6 +35,8 @@ struct lcd_pins{
 #define INIT _IOW('a', 'g', struct lcd_pins *)
 
 static int lcd_init(struct lcd_pins * pins);
+static void lcd_byte(uint8_t bits, uint8_t mode);
+static int write_full(char string[]);
 
 #endif // LCD_DRIVER_H
 
