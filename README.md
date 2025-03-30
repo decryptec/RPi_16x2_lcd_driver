@@ -1,4 +1,5 @@
-# RPi_16x2_LCD_Driver
+# Raspberry Pi 4b 16x2 LCD Device Driver
+uname -r = 6.6.74+rpt-rpi-v8
 
 ## **1. Install Dependencies**  
 Before building the driver, ensure your system is updated and required packages are installed:  
