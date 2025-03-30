@@ -13,9 +13,6 @@ static char buffer[MAX_BUFFER_SIZE];
 static ssize_t buffer_size = 0;
 static int major = 0;
 
-static void lcd_byte(uint8_t bits, uint8_t mode);
-static int write_full(char string[]);
-
 static ssize_t my_read(struct file *filp, char __user *user_buffer, size_t count, loff_t *offset) {
     size_t len = buffer_size;
 
@@ -189,7 +186,7 @@ static void lcd_byte(uint8_t bits, uint8_t mode) {
 static int write_full(char string[]) {
     gpiod_set_value(rs, 1);
     int i;
-    for (i = 0; i < 32; i++) {
+    for (i = 0; i < MAX_BUFFER_SIZE; i++) {
         if (string[i] == '\0')
             break;
         lcd_byte(string[i], 1);
